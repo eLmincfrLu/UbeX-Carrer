@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Partner Dashboard{% endblock %}
+{% block sidebar_nav %}
+<a href="{{ url_for('partner.dashboard') }}" class="active">Dashboard</a>
+<a href="{{ url_for('vacancy.list_vacancies') }}">My vacancies</a>
+<a href="{{ url_for('vacancy.add_vacancy') }}">Post vacancy</a>
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <h1>Talent pool</h1>
+  <p>Filter candidates by verified skills — not unreliable CVs.</p>
+</header>
+
+<section class="stats-grid">
+  <article class="stat-card"><span>Your vacancies</span><strong>{{ stats.vacancy_count }}</strong></article>
+  <article class="stat-card"><span>Applications</span><strong>{{ stats.application_count }}</strong></article>
+  <article class="stat-card"><span>Active posts</span><strong>{{ stats.active_vacancies }}</strong></article>
+</section>
+
+<section class="panel">
+  <h2>Top semantic matches</h2>
+  {% if stats.top_matches %}
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Candidate</th><th>Vacancy</th><th>Match</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for app in stats.top_matches %}
+        <tr>
+          <td>{{ app.student.full_name }}</td>
+          <td>{{ app.vacancy.title }}</td>
+          <td><span class="match-pill">{{ app.match_score }}%</span></td>
+          <td>{{ app.status }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="muted">No applications yet. Post a vacancy to start matching.</p>
+  {% endif %}
+</section>
+
+<a class="btn btn-primary" href="{{ url_for('vacancy.add_vacancy') }}">Post new vacancy</a>
+{% endblock %}

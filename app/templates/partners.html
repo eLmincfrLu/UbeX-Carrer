@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Partners{% endblock %}
+{% block sidebar_nav %}
+<a href="{{ url_for('university.dashboard') }}">Overview</a>
+<a href="{{ url_for('partner.partners_list') }}" class="active">Partners</a>
+{% endblock %}
+{% block content %}
+<header class="page-header"><h1>Industry partners</h1></header>
+<section class="vacancy-grid">
+  {% for p in partners %}
+  <article class="vacancy-card">
+    <h3>{{ p.name }}</h3>
+    <p>{{ p.industry }}</p>
+    <p>{{ p.description }}</p>
+    {% if p.website %}<a href="{{ p.website }}" target="_blank" rel="noopener">Website</a>{% endif %}
+  </article>
+  {% endfor %}
+</section>
+{% endblock %}

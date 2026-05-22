@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Certificates{% endblock %}
+{% block sidebar_nav %}
+<a href="{{ url_for('student.dashboard') }}">Dashboard</a>
+<a href="{{ url_for('student.certificates') }}" class="active">Certificates</a>
+{% endblock %}
+{% block content %}
+<header class="page-header"><h1>Verified certificates</h1></header>
+<section class="vacancy-grid">
+  {% for c in certificates %}
+  <article class="vacancy-card">
+    <h3>{{ c.title }}</h3>
+    <p>{{ c.issuer }} · {{ c.issue_date or 'N/A' }}</p>
+    {% if c.verified %}<span class="badge badge-verified">Verified</span>{% endif %}
+  </article>
+  {% else %}
+  <p class="muted">No certificates yet.</p>
+  {% endfor %}
+</section>
+{% endblock %}

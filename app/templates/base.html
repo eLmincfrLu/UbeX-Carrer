@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}UBEx{% endblock %} — Verified Education to Career Bridge</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+  {% if current_user.is_authenticated %}
+  <aside class="sidebar">
+    <a href="/" class="brand">
+      <span class="brand-mark">U</span>
+      <span class="brand-text">UBEx</span>
+    </a>
+    <p class="sidebar-role">{{ current_user.role|capitalize }}</p>
+    <nav class="sidebar-nav">
+      {% block sidebar_nav %}{% endblock %}
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <span class="avatar">{{ current_user.full_name[0] }}</span>
+        <div>
+          <strong>{{ current_user.full_name }}</strong>
+          <small>{{ current_user.email }}</small>
+        </div>
+      </div>
+      {% if current_user.verified %}
+      <span class="badge badge-verified">Verified Profile</span>
+      {% endif %}
+      <a class="btn btn-ghost btn-sm" href="{{ url_for('auth.logout') }}">Sign out</a>
+    </div>
+  </aside>
+  {% endif %}
+
+  <main class="{% if current_user.is_authenticated %}main-with-sidebar{% else %}main-auth{% endif %}">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      <div class="flash-stack">
+        {% for category, message in messages %}
+        <div class="flash flash-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

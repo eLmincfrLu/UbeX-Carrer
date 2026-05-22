@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}References{% endblock %}
+{% block sidebar_nav %}
+{% if teacher_mode %}
+<a href="{{ url_for('teacher.dashboard') }}">Dashboard</a>
+<a href="{{ url_for('teacher.references') }}" class="active">References</a>
+{% else %}
+<a href="{{ url_for('student.dashboard') }}">Dashboard</a>
+<a href="{{ url_for('student.references') }}" class="active">References</a>
+{% endif %}
+{% endblock %}
+{% block content %}
+<header class="page-header"><h1>Academic references</h1></header>
+
+{% if teacher_mode %}
+<form method="post" class="panel form-panel">
+  <label>Student
+    <select name="student_id" required>
+      {% for s in students %}<option value="{{ s.id }}">{{ s.full_name }}</option>{% endfor %}
+    </select>
+  </label>
+  <label>Rating (1-5)<input type="number" name="rating" min="1" max="5" value="5"></label>
+  <label>Reference<textarea name="content" rows="4" required></textarea></label>
+  <button type="submit" class="btn btn-primary">Submit reference</button>
+</form>
+{% endif %}
+
+<section class="panel">
+  {% for r in references %}
+  <blockquote class="reference-item">
+    <p>{{ r.content }}</p>
+    <footer>
+      {% if teacher_mode %}For {{ r.student.full_name }}{% else %}By {{ r.author.full_name }}{% endif %}
+      · ★ {{ r.rating }}/5
+    </footer>
+  </blockquote>
+  {% else %}
+  <p class="muted">No references yet.</p>
+  {% endfor %}
+</section>
+{% endblock %}
