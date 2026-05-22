@@ -34,7 +34,7 @@ cd UbeX-Carrer
 python -m venv .venv
 .venv\Scripts\activate    # Windows
 pip install -r requirements.txt
-copy .env.example .env
+cp .env.example .env
 python run.py
 ```
 
