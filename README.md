@@ -14,12 +14,12 @@ Hackathon MVP for connecting **students**, **teachers**, **universities**, and *
 ```
 ubex/
 ├── app/
-│   ├── static/          # css, js, images
-│   ├── templates/       # HTML pages
-│   ├── routes/          # Blueprints per role
-│   ├── models/          # SQLAlchemy models
-│   ├── database/        # connection + SQLite file
-│   ├── services/        # auth, analytics, gemini
+│   ├── static/          # css, js, images bu fayllar burdadair
+│   ├── templates/       # HTML seyfeleri
+│   ├── routes/
+│   ├── models/          # SQLAlchemy modeli bu qovluqda olacaq
+│   ├── database/        # sql lite istifade etmisik
+│   ├── services/
 │   ├── utils/
 │   └── main.py
 ├── requirements.txt
