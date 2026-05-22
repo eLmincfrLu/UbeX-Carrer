@@ -30,7 +30,7 @@ ubex/
 ## Quick start
 
 ```bash
-cd ubex
+cd UbeX-Carrer
 python -m venv .venv
 .venv\Scripts\activate    # Windows
 pip install -r requirements.txt
