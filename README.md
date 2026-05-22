@@ -32,7 +32,7 @@ ubex/
 ```bash
 cd UbeX-Carrer
 python -m venv .venv
-.venv\Scripts\activate    # Windows
+.venv/Scripts/activate
 pip install -r requirements.txt
 cp .env.example .env
 python run.py
