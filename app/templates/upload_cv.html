@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Upload CV{% endblock %}
+{% block sidebar_nav %}
+<a href="{{ url_for('student.dashboard') }}">Dashboard</a>
+<a href="{{ url_for('student.upload_cv') }}" class="active">Upload CV</a>
+<a href="{{ url_for('student.profile') }}">Profile</a>
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1>Upload your CV</h1>
+    <p>UBEx AI reads your CV and builds your verified skill matrix for the dashboard.</p>
+  </div>
+</header>
+
+<section class="dashboard-grid">
+  <article class="panel cv-upload-panel">
+    <h2>CV file</h2>
+    <p class="muted">Supported: PDF, TXT, DOC, DOCX (max 5 MB)</p>
+    <form method="post" enctype="multipart/form-data" id="cv-upload-form" action="{{ url_for('student.upload_cv') }}">
+      <label class="file-drop">
+        <input type="file" name="cv_file" id="cv_file" accept=".pdf,.txt,.doc,.docx" required>
+        <span id="file-label">Choose file or drag here</span>
+      </label>
+      <button type="submit" class="btn btn-primary" id="cv-submit-btn">Analyze with AI → Build dashboard</button>
+    </form>
+    {% if has_cv %}
+    <p class="cv-hint">You already uploaded a CV. Uploading again will replace it and refresh your dashboard.</p>
+    {% endif %}
+  </article>
+
+  <article class="panel">
+    <h2>What happens next?</h2>
+    <ol class="steps-list">
+      <li><strong>Data mining</strong> — NLP extracts skills from your CV text</li>
+      <li><strong>Data fusion</strong> — Skills merge with your university profile</li>
+      <li><strong>Dashboard</strong> — Skill matrix, chart, and match scores appear</li>
+    </ol>
+    <span class="badge badge-verified">Verified Profile</span>
+  </article>
+</section>
+{% endblock %}
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/cv.js') }}"></script>
+{% endblock %}

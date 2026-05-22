@@ -6,11 +6,17 @@ class AnalyticsService:
     @staticmethod
     def student_dashboard(user: User) -> dict:
         skills = user.skills or []
+        analysis = user.cv_analysis or {}
         return {
             "skill_count": len(skills),
             "avg_skill": round(sum(s.get("score", 0) for s in skills) / len(skills), 1) if skills else 0,
             "applications": Application.query.filter_by(student_id=user.id).count(),
             "verified": user.verified,
+            "has_cv": user.has_cv,
+            "cv_summary": analysis.get("summary"),
+            "cv_strengths": analysis.get("strengths", []),
+            "suggested_roles": analysis.get("suggested_roles", []),
+            "experience_years": analysis.get("experience_years", 0),
             "skills": [
                 {**s, "level": skill_level_label(s.get("score", 0))} for s in skills
             ],

@@ -74,6 +74,38 @@
   font-size: 0.85rem;
 }
 
+.cv-upload-panel .file-drop {
+  display: grid;
+  gap: 0.5rem;
+  padding: 1.25rem;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 1rem;
+  cursor: pointer;
+  text-align: center;
+  color: var(--muted);
+}
+.cv-upload-panel input[type="file"] { width: 100%; }
+.cv-hint { font-size: 0.85rem; color: var(--muted); margin-top: 0.75rem; }
+
+.cv-empty-banner {
+  margin-bottom: 1.5rem;
+  text-align: center;
+  padding: 2rem;
+}
+.cv-empty-banner p { color: var(--muted); max-width: 520px; margin: 0 auto 1rem; }
+
+.ai-insight-panel { margin-bottom: 1.5rem; }
+.tag-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
+.tag {
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(91, 124, 250, 0.15);
+  color: #b9c8ff;
+  font-size: 0.85rem;
+}
+.steps-list { color: var(--muted); line-height: 1.8; padding-left: 1.2rem; }
+
 .fade-in {
   animation: fadeIn 0.45s ease both;
 }

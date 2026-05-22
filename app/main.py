@@ -27,6 +27,27 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent
 DB_PATH = BASE_DIR / "database" / "database.db"
+CV_UPLOAD_FOLDER = BASE_DIR / "uploads" / "cvs"
+
+
+def ensure_user_cv_columns():
+    from sqlalchemy import inspect, text
+
+    inspector = inspect(db.engine)
+    if "users" not in inspector.get_table_names():
+        return
+    existing = {c["name"] for c in inspector.get_columns("users")}
+    alters = []
+    if "cv_filename" not in existing:
+        alters.append("ALTER TABLE users ADD COLUMN cv_filename VARCHAR(255)")
+    if "cv_analysis_json" not in existing:
+        alters.append("ALTER TABLE users ADD COLUMN cv_analysis_json TEXT")
+    if "cv_uploaded_at" not in existing:
+        alters.append("ALTER TABLE users ADD COLUMN cv_uploaded_at DATETIME")
+    with db.engine.connect() as conn:
+        for stmt in alters:
+            conn.execute(text(stmt))
+        conn.commit()
 
 
 def create_app() -> Flask:
@@ -38,6 +59,8 @@ def create_app() -> Flask:
     app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET_KEY", "ubex-dev-secret")
     app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_PATH}"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    app.config["CV_UPLOAD_FOLDER"] = str(CV_UPLOAD_FOLDER)
+    app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024
 
     db.init_app(app)
 
@@ -69,7 +92,9 @@ def create_app() -> Flask:
 
     with app.app_context():
         DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+        CV_UPLOAD_FOLDER.mkdir(parents=True, exist_ok=True)
         db.create_all()
+        ensure_user_cv_columns()
         if User.query.count() == 0:
             seed_database()
 
@@ -109,6 +134,15 @@ def seed_database():
     db.session.flush()
 
     student = User.query.filter_by(email="student@university.edu.az").first()
+    if student:
+        student.cv_filename = "demo_cv.pdf"
+        student.cv_analysis = {
+            "summary": "Demo: AI analyzed CV and extracted verified technical skills.",
+            "strengths": ["Python", "Data Analysis", "SQL"],
+            "skills": student.skills,
+            "experience_years": 1,
+            "suggested_roles": ["Junior Python Developer"],
+        }
     teacher = User.query.filter_by(email="teacher@university.edu.az").first()
     partner = User.query.filter_by(email="hr@partner.ubex.local").first()
 

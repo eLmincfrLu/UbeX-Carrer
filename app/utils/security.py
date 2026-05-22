@@ -18,6 +18,12 @@ ROLE_DASHBOARD = {
 }
 
 
+def post_login_route(user) -> str:
+    if user.role == "student" and not user.has_cv:
+        return "student.upload_cv"
+    return ROLE_DASHBOARD[user.role]
+
+
 def is_university_email(email: str) -> bool:
     if not email or "@" not in email:
         return False

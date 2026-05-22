@@ -49,9 +49,17 @@ Open http://127.0.0.1:5000
 | University| admin@university.edu.az       | uni123      |
 | Partner   | hr@partner.ubex.local         | partner123  |
 
+## CV + AI flow (students)
+
+1. Register as **Student** → redirected to **Upload CV**
+2. Upload PDF/TXT → AI extracts skills → **Dashboard** shows skill matrix & chart
+3. Profile page can re-analyze or upload a new CV
+
+CV files are stored in `app/uploads/cvs/` (not in git).
+
 ## Pitch demo flow
 
-1. **Student** — Show verified skill matrix → one-click apply on vacancy.
+1. **Student** — Upload CV (or use demo account) → verified skill matrix → one-click apply.
 2. **Partner** — Post vacancy → view semantic match scores.
 3. **University** — Ecosystem analytics dashboard.
 4. Emphasize **Verified Profile** during the demo.

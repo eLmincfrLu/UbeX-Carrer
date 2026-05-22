@@ -2,7 +2,7 @@ from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import login_required, login_user, logout_user
 
 from app.services.auth_service import AuthService
-from app.utils.security import ROLE_DASHBOARD
+from app.utils.security import post_login_route
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -23,7 +23,7 @@ def login():
             flash(err, "error")
         else:
             login_user(user)
-            return redirect(url_for(ROLE_DASHBOARD[user.role]))
+            return redirect(url_for(post_login_route(user)))
     return render_template("login.html")
 
 
@@ -43,7 +43,9 @@ def register():
             flash(err, "error")
         else:
             login_user(user)
-            return redirect(url_for(ROLE_DASHBOARD[user.role]))
+            if user.role == "student":
+                flash("Upload your CV — AI will build your verified skill dashboard.", "success")
+            return redirect(url_for(post_login_route(user)))
     return render_template("login.html", register_mode=True)
 
 
