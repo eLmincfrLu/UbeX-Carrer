@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Teacher Dashboard{% endblock %}
+{% block sidebar_nav %}
+<a href="{{ url_for('teacher.dashboard') }}" class="active">Dashboard</a>
+<a href="{{ url_for('teacher.references') }}">Write reference</a>
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <h1>Faculty dashboard</h1>
+  <p>Validate student performance with academic references.</p>
+</header>
+
+<section class="stats-grid">
+  <article class="stat-card"><span>Students in system</span><strong>{{ stats.students }}</strong></article>
+  <article class="stat-card"><span>Your references</span><strong>{{ reference_count }}</strong></article>
+  <article class="stat-card"><span>Active vacancies</span><strong>{{ stats.active_vacancies }}</strong></article>
+</section>
+
+<section class="panel">
+  <h2>Students</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Name</th><th>Department</th><th>GPA</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for s in students %}
+        <tr>
+          <td>{{ s.full_name }}</td>
+          <td>{{ s.department or '—' }}</td>
+          <td>{{ s.gpa }}</td>
+          <td><span class="badge badge-verified">Verified</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

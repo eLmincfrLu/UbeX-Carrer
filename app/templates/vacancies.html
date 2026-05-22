@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Vacancies{% endblock %}
+{% block sidebar_nav %}
+{% if role == 'student' %}
+<a href="{{ url_for('student.dashboard') }}">Dashboard</a>
+<a href="{{ url_for('student.vacancies') }}" class="active">Vacancies</a>
+{% elif role == 'partner' %}
+<a href="{{ url_for('partner.dashboard') }}">Dashboard</a>
+<a href="{{ url_for('vacancy.list_vacancies') }}" class="active">Vacancies</a>
+<a href="{{ url_for('vacancy.add_vacancy') }}">Post vacancy</a>
+{% endif %}
+{% endblock %}
+{% block content %}
+<header class="page-header">
+  <h1>{% if detail_mode %}Applications{% else %}Vacancies{% endif %}</h1>
+  {% if role == 'partner' and not detail_mode %}
+  <a href="{{ url_for('vacancy.add_vacancy') }}" class="btn btn-primary">+ Post vacancy</a>
+  {% endif %}
+</header>
+
+{% if applications is defined %}
+<section class="panel">
+  <h2>{{ vacancies[0].title }}</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Student</th><th>GPA</th><th>Match</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for app in applications %}
+        <tr>
+          <td>{{ app.student.full_name }}</td>
+          <td>{{ app.student.gpa }}</td>
+          <td><span class="match-pill">{{ app.match_score }}%</span></td>
+          <td>{{ app.status }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% else %}
+<section class="vacancy-grid" id="vacancy-list">
+  {% for v in vacancies %}
+  <article class="vacancy-card" data-id="{{ v.id }}">
+    <div class="vacancy-head">
+      <h3>{{ v.title }}</h3>
+      <span>{{ v.company_name }}</span>
+    </div>
+    <p>{{ v.description[:160] }}{% if v.description|length > 160 %}…{% endif %}</p>
+    <p class="tags">{{ v.required_skills }}</p>
+    <footer>
+      <span>{{ v.location or 'Remote' }} · {{ v.employment_type }}</span>
+      {% if role == 'student' %}
+        {% if v.id in applied_ids %}
+        <span class="badge">Applied</span>
+        {% else %}
+        <form method="post" action="{{ url_for('student.apply', vacancy_id=v.id) }}">
+          <button type="submit" class="btn btn-primary btn-sm">One-click apply</button>
+        </form>
+        {% endif %}
+      {% elif role == 'partner' %}
+      <a href="{{ url_for('vacancy.applications', vacancy_id=v.id) }}" class="btn btn-ghost btn-sm">View matches</a>
+      {% endif %}
+    </footer>
+  </article>
+  {% else %}
+  <p class="muted">No vacancies available.</p>
+  {% endfor %}
+</section>
+{% endif %}
+{% endblock %}
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/vacancies.js') }}"></script>
+{% endblock %}

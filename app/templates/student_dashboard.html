@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Student Dashboard{% endblock %}
+{% block sidebar_nav %}
+<a href="{{ url_for('student.dashboard') }}" class="active">Dashboard</a>
+<a href="{{ url_for('student.vacancies') }}">Vacancies</a>
+<a href="{{ url_for('student.certificates') }}">Certificates</a>
+<a href="{{ url_for('student.references') }}">References</a>
+<a href="{{ url_for('student.profile') }}">Profile</a>
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1>Welcome, {{ current_user.full_name.split()[0] }}</h1>
+    <p>Your verified skill profile is ready for employers.</p>
+  </div>
+  <span class="badge badge-verified badge-lg">Verified Profile</span>
+</header>
+
+<section class="stats-grid">
+  <article class="stat-card"><span>Skills tracked</span><strong>{{ stats.skill_count }}</strong></article>
+  <article class="stat-card"><span>Avg. skill score</span><strong>{{ stats.avg_skill }}%</strong></article>
+  <article class="stat-card"><span>Applications</span><strong>{{ stats.applications }}</strong></article>
+  <article class="stat-card"><span>GPA</span><strong>{{ current_user.gpa }}</strong></article>
+</section>
+
+<section class="dashboard-grid">
+  <article class="panel">
+    <h2>Skill matrix</h2>
+    <div class="skill-list">
+      {% for skill in stats.skills %}
+      <div class="skill-row">
+        <div class="skill-meta">
+          <strong>{{ skill.name }}</strong>
+          <span>{{ skill.level }}</span>
+        </div>
+        <div class="progress"><span style="width: {{ skill.score }}%"></span></div>
+        <em>{{ skill.score }}%</em>
+      </div>
+      {% endfor %}
+    </div>
+  </article>
+  <article class="panel">
+    <h2>Analytics</h2>
+    <canvas id="skills-chart" height="220"></canvas>
+  </article>
+</section>
+
+<a class="btn btn-primary" href="{{ url_for('student.vacancies') }}">Browse vacancies — one-click apply</a>
+{% endblock %}
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="{{ url_for('static', filename='js/analytics.js') }}"></script>
+{% endblock %}

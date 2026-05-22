@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}University Dashboard{% endblock %}
+{% block sidebar_nav %}
+<a href="{{ url_for('university.dashboard') }}" class="active">Overview</a>
+<a href="{{ url_for('partner.partners_list') }}">Partners</a>
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <h1>University intelligence</h1>
+  <p>Transform inactive academic data into career intelligence.</p>
+</header>
+
+<section class="stats-grid">
+  <article class="stat-card"><span>Students</span><strong>{{ stats.students }}</strong></article>
+  <article class="stat-card"><span>Teachers</span><strong>{{ stats.teachers }}</strong></article>
+  <article class="stat-card"><span>Industry partners</span><strong>{{ stats.partners }}</strong></article>
+  <article class="stat-card"><span>Active vacancies</span><strong>{{ stats.active_vacancies }}</strong></article>
+</section>
+
+<section class="dashboard-grid">
+  <article class="panel">
+    <h2>Ecosystem overview</h2>
+    <canvas id="skills-chart" height="220"></canvas>
+  </article>
+  <article class="panel">
+    <h2>Top performing students</h2>
+    <ul class="simple-list">
+      {% for s in top_students %}
+      <li><strong>{{ s.full_name }}</strong> — GPA {{ s.gpa }} · {{ s.department }}</li>
+      {% endfor %}
+    </ul>
+  </article>
+</section>
+{% endblock %}
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="{{ url_for('static', filename='js/analytics.js') }}"></script>
+{% endblock %}
