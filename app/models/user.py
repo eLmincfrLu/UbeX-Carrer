@@ -17,6 +17,9 @@ class User(UserMixin, db.Model):
     bio = db.Column(db.Text)
     gpa = db.Column(db.Float, default=0.0)
     skills_json = db.Column(db.Text, default="[]")
+    cv_filename = db.Column(db.String(255))
+    cv_analysis_json = db.Column(db.Text)
+    cv_uploaded_at = db.Column(db.DateTime)
     verified = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
 
@@ -50,3 +53,25 @@ class User(UserMixin, db.Model):
         import json
 
         self.skills_json = json.dumps(value)
+
+    @property
+    def has_cv(self) -> bool:
+        return bool(self.cv_filename)
+
+    @property
+    def cv_analysis(self) -> dict:
+        import json
+
+        if not self.cv_analysis_json:
+            return {}
+        try:
+            data = json.loads(self.cv_analysis_json)
+            return data if isinstance(data, dict) else {}
+        except json.JSONDecodeError:
+            return {}
+
+    @cv_analysis.setter
+    def cv_analysis(self, value: dict) -> None:
+        import json
+
+        self.cv_analysis_json = json.dumps(value)

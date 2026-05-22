@@ -2,14 +2,40 @@
 {% block title %}Profile{% endblock %}
 {% block sidebar_nav %}
 <a href="{{ url_for('student.dashboard') }}">Dashboard</a>
+<a href="{{ url_for('student.upload_cv') }}">Upload CV</a>
 <a href="{{ url_for('student.profile') }}" class="active">Profile</a>
 {% endblock %}
 {% block content %}
 <header class="page-header"><h1>Profile</h1></header>
-<form method="post" class="panel form-panel">
-  <label>Full name<input type="text" name="full_name" value="{{ user.full_name }}"></label>
-  <label>Department<input type="text" name="department" value="{{ user.department or '' }}"></label>
-  <label>Bio<textarea name="bio" rows="4">{{ user.bio or '' }}</textarea></label>
-  <button type="submit" class="btn btn-primary">Save</button>
-</form>
+
+<section class="dashboard-grid">
+  <article class="panel form-panel">
+    <h2>Personal info</h2>
+    <form method="post">
+      <input type="hidden" name="form_type" value="profile">
+      <label>Full name<input type="text" name="full_name" value="{{ user.full_name }}"></label>
+      <label>Department<input type="text" name="department" value="{{ user.department or '' }}"></label>
+      <label>Bio<textarea name="bio" rows="4">{{ user.bio or '' }}</textarea></label>
+      <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+  </article>
+
+  <article class="panel cv-upload-panel">
+    <h2>CV & AI analysis</h2>
+    {% if user.has_cv %}
+    <p class="muted">Uploaded: <strong>{{ user.cv_filename }}</strong></p>
+    {% if user.cv_analysis.summary %}
+    <p>{{ user.cv_analysis.summary }}</p>
+    {% endif %}
+    <form method="post">
+      <input type="hidden" name="form_type" value="cv_reanalyze">
+      <button type="submit" class="btn btn-ghost">Re-analyze CV with AI</button>
+    </form>
+    <a href="{{ url_for('student.upload_cv') }}" class="btn btn-primary btn-sm" style="margin-top:0.75rem">Upload new CV</a>
+    {% else %}
+    <p class="muted">No CV yet. Upload one to generate your skill dashboard.</p>
+    <a href="{{ url_for('student.upload_cv') }}" class="btn btn-primary">Upload CV</a>
+    {% endif %}
+  </article>
+</section>
 {% endblock %}

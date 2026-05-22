@@ -14,12 +14,12 @@ Hackathon MVP for connecting **students**, **teachers**, **universities**, and *
 ```
 ubex/
 ├── app/
-│   ├── static/          # css, js, images
-│   ├── templates/       # HTML pages
-│   ├── routes/          # Blueprints per role
-│   ├── models/          # SQLAlchemy models
-│   ├── database/        # connection + SQLite file
-│   ├── services/        # auth, analytics, gemini
+│   ├── static/          # css, js, images bu fayllar burdadair
+│   ├── templates/       # HTML seyfeleri
+│   ├── routes/
+│   ├── models/          # SQLAlchemy modeli bu qovluqda olacaq
+│   ├── database/        # sql lite istifade etmisik
+│   ├── services/
 │   ├── utils/
 │   └── main.py
 ├── requirements.txt
@@ -30,11 +30,11 @@ ubex/
 ## Quick start
 
 ```bash
-cd ubex
+cd UbeX-Carrer
 python -m venv .venv
-.venv\Scripts\activate    # Windows
+.venv/Scripts/activate
 pip install -r requirements.txt
-copy .env.example .env
+cp .env.example .env
 python run.py
 ```
 
@@ -49,9 +49,17 @@ Open http://127.0.0.1:5000
 | University| admin@university.edu.az       | uni123      |
 | Partner   | hr@partner.ubex.local         | partner123  |
 
+## CV + AI flow (students)
+
+1. Register as **Student** → redirected to **Upload CV**
+2. Upload PDF/TXT → AI extracts skills → **Dashboard** shows skill matrix & chart
+3. Profile page can re-analyze or upload a new CV
+
+CV files are stored in `app/uploads/cvs/` (not in git).
+
 ## Pitch demo flow
 
-1. **Student** — Show verified skill matrix → one-click apply on vacancy.
+1. **Student** — Upload CV (or use demo account) → verified skill matrix → one-click apply.
 2. **Partner** — Post vacancy → view semantic match scores.
 3. **University** — Ecosystem analytics dashboard.
 4. Emphasize **Verified Profile** during the demo.

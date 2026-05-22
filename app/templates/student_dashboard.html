@@ -2,6 +2,7 @@
 {% block title %}Student Dashboard{% endblock %}
 {% block sidebar_nav %}
 <a href="{{ url_for('student.dashboard') }}" class="active">Dashboard</a>
+<a href="{{ url_for('student.upload_cv') }}">Upload CV</a>
 <a href="{{ url_for('student.vacancies') }}">Vacancies</a>
 <a href="{{ url_for('student.certificates') }}">Certificates</a>
 <a href="{{ url_for('student.references') }}">References</a>
@@ -12,10 +13,39 @@
 <header class="page-header">
   <div>
     <h1>Welcome, {{ current_user.full_name.split()[0] }}</h1>
-    <p>Your verified skill profile is ready for employers.</p>
+    {% if stats.has_cv %}
+    <p>AI-built verified profile from your CV{% if stats.experience_years %} · {{ stats.experience_years }}+ years experience{% endif %}</p>
+    {% else %}
+    <p>Upload your CV so AI can build your skill matrix.</p>
+    {% endif %}
   </div>
   <span class="badge badge-verified badge-lg">Verified Profile</span>
 </header>
+
+{% if not stats.has_cv and not stats.skills %}
+<section class="panel cv-empty-banner">
+  <h2>No CV analysis yet</h2>
+  <p>Your dashboard is empty until you upload a CV. Our AI will extract skills and generate charts automatically.</p>
+  <a href="{{ url_for('student.upload_cv') }}" class="btn btn-primary">Upload CV — start AI analysis</a>
+</section>
+{% else %}
+
+{% if stats.cv_summary %}
+<section class="panel ai-insight-panel">
+  <h2>AI insight (from your CV)</h2>
+  <p>{{ stats.cv_summary }}</p>
+  {% if stats.cv_strengths %}
+  <div class="tag-row">
+    {% for s in stats.cv_strengths %}
+    <span class="tag">{{ s }}</span>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% if stats.suggested_roles %}
+  <p class="muted">Suggested roles: {{ stats.suggested_roles | join(', ') }}</p>
+  {% endif %}
+</section>
+{% endif %}
 
 <section class="stats-grid">
   <article class="stat-card"><span>Skills tracked</span><strong>{{ stats.skill_count }}</strong></article>
@@ -27,6 +57,7 @@
 <section class="dashboard-grid">
   <article class="panel">
     <h2>Skill matrix</h2>
+    {% if stats.skills %}
     <div class="skill-list">
       {% for skill in stats.skills %}
       <div class="skill-row">
@@ -39,6 +70,9 @@
       </div>
       {% endfor %}
     </div>
+    {% else %}
+    <p class="muted">Re-upload or re-analyze your CV from Profile.</p>
+    {% endif %}
   </article>
   <article class="panel">
     <h2>Analytics</h2>
@@ -47,8 +81,12 @@
 </section>
 
 <a class="btn btn-primary" href="{{ url_for('student.vacancies') }}">Browse vacancies — one-click apply</a>
+<a class="btn btn-ghost" href="{{ url_for('student.upload_cv') }}">Update CV</a>
+{% endif %}
 {% endblock %}
 {% block extra_js %}
+{% if stats.has_cv and stats.skills %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script src="{{ url_for('static', filename='js/analytics.js') }}"></script>
+{% endif %}
 {% endblock %}
