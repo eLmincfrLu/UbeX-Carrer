@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Sign in{% endblock %}
+{% block body_class %}page-auth{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="auth-shell">
+  <div class="auth-hero">
+    <span class="pill">Hackathon MVP</span>
+    <h1>UBEx</h1>
+    <p class="lead">The most reliable bridge between education and career.</p>
+    <ul class="hero-points">
+      <li>Verified profiles from university systems</li>
+      <li>AI-powered skill matrix & semantic matching</li>
+      <li>One-click applications for students</li>
+    </ul>
+  </div>
+  <div class="auth-card">
+    <h2>{% if register_mode %}Create account{% else %}Sign in{% endif %}</h2>
+    <form method="post" action="{% if register_mode %}{{ url_for('auth.register') }}{% else %}{{ url_for('auth.login') }}{% endif %}" id="auth-form">
+      {% if register_mode %}
+      <label>Full name<input type="text" name="full_name" required></label>
+      <label>Role
+        <select name="role" id="role-select" required>
+          <option value="student">Student</option>
+          <option value="teacher">Teacher</option>
+          <option value="university">University</option>
+          <option value="partner">Company / Partner</option>
+        </select>
+      </label>
+      <label class="field-university">University<input type="text" name="university" placeholder="UBEx Pilot University"></label>
+      <label class="field-student">Department<input type="text" name="department" placeholder="Computer Science"></label>
+      <label class="field-student">GPA<input type="number" step="0.01" min="0" max="4" name="gpa" placeholder="3.5"></label>
+      {% endif %}
+      <label>Email<input type="email" name="email" required placeholder="you@university.edu.az"></label>
+      <label>Password<input type="password" name="password" required minlength="6"></label>
+      <button type="submit" class="btn btn-primary btn-block">{% if register_mode %}Register{% else %}Sign in{% endif %}</button>
+    </form>
+    <p class="auth-switch">
+      {% if register_mode %}
+      Already have an account? <a href="{{ url_for('auth.login') }}">Sign in</a>
+      {% else %}
+      New here? <a href="{{ url_for('auth.register') }}">Register</a>
+      {% endif %}
+    </p>
+    <details class="demo-accounts">
+      <summary>Demo accounts</summary>
+      <ul>
+        <li><strong>Student:</strong> student@university.edu.az / student123</li>
+        <li><strong>Teacher:</strong> teacher@university.edu.az / teacher123</li>
+        <li><strong>University:</strong> admin@university.edu.az / uni123</li>
+        <li><strong>Partner:</strong> hr@partner.ubex.local / partner123</li>
+      </ul>
+    </details>
+  </div>
+</section>
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+{% endblock %}
